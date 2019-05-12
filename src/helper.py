@@ -17,3 +17,11 @@ def write_file(list_of_booleans, filename):
 
     with open(filename, mode="wb") as file:
         file.write(binary_text_to_save)
+
+def check_successful_transmission(input_filename, output_filename):
+    with open(input_filename, mode="rb") as input_file:
+        with open(output_filename, mode="rb") as output_file:
+            if (input_file.read() == output_file.read()):
+                print("The transmission was successful ! :)")
+            else:
+                print("The transmission failed miserably ! :(")

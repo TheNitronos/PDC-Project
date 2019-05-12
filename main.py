@@ -19,6 +19,7 @@ if __name__ == '__main__':
                         help='.txt file containing transmitted bytes.')
 
     args = parser.parse_args()
+
     args.input_file  = pathlib.Path(TEXT_FILES_PATH+"Inputs/" +args.input_file ).resolve(strict=True)
     args.output_file = pathlib.Path(TEXT_FILES_PATH+"Outputs/"+args.output_file).resolve(strict=False)
 
@@ -29,6 +30,8 @@ if __name__ == '__main__':
     if not (args.output_file.suffix == '.txt'):
         raise ValueError('Parameter[output_file] is not a .txt file.')
 
-    #test read/write file with list of booleans encoding
     temp = read_file(args.input_file)
+    #temp is a list of booleans
     write_file(temp, args.output_file)
+
+    check_successful_transmission(args.input_file, args.output_file)
