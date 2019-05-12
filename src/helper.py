@@ -1,23 +1,19 @@
+import bitarray
 
 def read_file(filename):
-    read_text = None
+    read_bytes = None
 
-    with open(filename, mode="r") as file:
-        read_text = file.read()
+    with open(filename, mode="rb") as file:
+        read_bytes = file.read()
 
-    encoded_text = read_text.encode("utf-8")
-    list_of_booleans = []
-
-    for byte in encoded_text:
-        for bit in bin(byte)[2:]:
-            if bit == "0":
-                list_of_booleans.append(True)
-            elif  bit == "1":
-                list_of_booleans.append(False)
-            else:
-                raise Exception("Bits should have value 0 or 1, found : {}".format(bit))
+    list_of_booleans = bitarray.bitarray()
+    list_of_booleans.frombytes(read_bytes)
+    list_of_booleans = list_of_booleans.tolist()
 
     return list_of_booleans
 
 def write_file(list_of_booleans, filename):
-    return
+    binary_text_to_save = bitarray.bitarray(list_of_booleans).tobytes()
+
+    with open(filename, mode="wb") as file:
+        file.write(binary_text_to_save)
