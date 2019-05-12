@@ -22,4 +22,4 @@ if __name__ == '__main__':
             (args.input_file.suffix == '.txt')):
         raise ValueError('Parameter[input_file] is not a .txt file.')
 
-    print(read_file(args.input_file))
+    read_file(args.input_file)
