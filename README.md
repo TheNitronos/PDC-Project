@@ -7,6 +7,6 @@ This project is about developping a system capable of reliably transmitting text
 Run main.py with python3 from command line with corresponding .txt input and output filenames (located in /Text-Files/Inputs/ and /Text-Files/Outputs/) : `python3 main.py --input_file test.txt --output_file test.txt`
 
 ## Collaborators
-- Amine Chaouchi
+- Amine Chaouachi
 - Cédric Tomasini
 - Daniel Filipe Nunes Silva
