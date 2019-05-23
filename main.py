@@ -6,7 +6,7 @@ import pathlib
 
 import numpy as np
 
-TEXT_FILES_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Text-Files/")
+TEXT_FILES_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "res/")
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Read/Write bytes from .txt file",
@@ -20,8 +20,8 @@ def parse_args():
 
     args = parser.parse_args()
 
-    args.input_file  = pathlib.Path(TEXT_FILES_PATH+"Inputs/" +args.input_file ).resolve(strict=True)
-    args.output_file = pathlib.Path(TEXT_FILES_PATH+"Outputs/"+args.output_file).resolve(strict=False)
+    args.input_file  = pathlib.Path(TEXT_FILES_PATH+"in/" +args.input_file ).resolve(strict=True)
+    args.output_file = pathlib.Path(TEXT_FILES_PATH+"out/"+args.output_file).resolve(strict=False)
 
     if not (args.input_file.is_file() and
             (args.input_file.suffix == '.txt')):
