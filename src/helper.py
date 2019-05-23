@@ -1,22 +1,44 @@
-import bitarray
+import numpy as np
 
-def read_file(filename):
-    read_bytes = None
+from random import choice
 
-    with open(filename, mode="rb") as file:
-        read_bytes = file.read()
+Fs = 22050
+Ts = 1/Fs
 
-    list_of_booleans = bitarray.bitarray()
-    list_of_booleans.frombytes(read_bytes)
-    list_of_booleans = list_of_booleans.tolist()
+A = 1
+K = 14
+W = 1575
 
-    return list_of_booleans
+def random_detection_sequence(length):
+    return [choice([True, False]) for _ in range(length)]
 
-def write_file(list_of_booleans, filename):
-    binary_text_to_save = bitarray.bitarray(list_of_booleans).tobytes()
+def cos_modulation(frequency, signal_length):
+    return np.array([np.cos(2*np.pi*frequency*a*Ts) for a in range(signal_length)])
 
-    with open(filename, mode="wb") as file:
-        file.write(binary_text_to_save)
+def encode(list_of_booleans):
+    bits   = [A if b else -A for b in list_of_booleans]
+    signal = np.repeat(bits, K)
+
+    signal_length = len(signal)
+
+    modulation = cos_modulation(2000, signal_length) + \
+                 cos_modulation(4000, signal_length) + \
+                 cos_modulation(6000, signal_length) + \
+                 cos_modulation(8000, signal_length)
+
+    return modulation*signal/4
+
+def decode(received_signal, sent_signal_length):
+    signal_input  = received_signal[-sent_signal_length:]
+    signal_output = []
+
+    for i in range(sent_signal_length//K):
+        acc = 0
+        for j in range(K):
+            acc += signal_input[i * K + j]
+        signal_output.append(acc//K)
+
+    return signal_output
 
 def check_successful_transmission(input_filename, output_filename):
     with open(input_filename, mode="rb") as input_file:
