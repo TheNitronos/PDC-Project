@@ -1,3 +1,4 @@
+from src.io     import *
 from src.helper import *
 
 import os
@@ -41,10 +42,9 @@ if __name__ == '__main__':
     SENT_SIGNAL_FILENAME     = str(args.input_file)[:-4]  + "-sent-signal.txt"
     RECEIVED_SIGNAL_FILENAME = str(args.output_file)[:-4] + "-received-signal.txt"
 
-    booleans = read_file(INPUT_FILENAME)
-
-    ## TODO: turn the booleans (binary representation of INPUT_FILENAME content) into the signal to send and
-    ##       save it in SENT_SIGNAL_FILENAME file
+    sent_signal = encode(read_file(INPUT_FILENAME))
+    sent_signal_length = len(sent_signal)
+    np.savetxt(SENT_SIGNAL_FILENAME, sent_signal)
 
     server_command = """python ext/client.py \
                         --input_file {} \
@@ -55,10 +55,6 @@ if __name__ == '__main__':
 
     os.system(server_command)
 
-    ## TODO: use the received signal in RECEIVED_SIGNAL_FILENAME file to recover the binary representation of
-    ##       the received message and affect it to output_message variable (uncomment and complete the following lines)
+    write_file(decode(np.loadtxt(RECEIVED_SIGNAL_FILENAME), sent_signal_length), OUTPUT_FILENAME)
 
-    # output_message = #todo
-    # write_file(output_message)
-
-    # check_successful_transmission(INPUT_FILENAME, OUTPUT_FILENAME)
+    check_successful_transmission(INPUT_FILENAME, OUTPUT_FILENAME)
