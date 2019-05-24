@@ -39,22 +39,25 @@ if __name__ == '__main__':
     INPUT_FILENAME  = args.input_file
     OUTPUT_FILENAME = args.output_file
 
-    SENT_SIGNAL_FILENAME     = str(args.input_file)[:-4]  + "-sent-signal.txt"
+    SENT_SIGNAL_FILENAME     = str(args.input_file) [:-4]  + "-sent-signal.txt"
     RECEIVED_SIGNAL_FILENAME = str(args.output_file)[:-4] + "-received-signal.txt"
 
-    sent_signal = encode(read_file(INPUT_FILENAME))
+
+    detection_sequence = random_detection_sequence(30)
+    sent_signal = encode(detection_sequence+read_file(INPUT_FILENAME))
     sent_signal_length = len(sent_signal)
+    print(sent_signal_length)
     np.savetxt(SENT_SIGNAL_FILENAME, sent_signal)
 
-    server_command = """python ext/client.py \
-                        --input_file {} \
-                        --output_file {} \
-                        --srv_hostname iscsrv72.epfl.ch \
-                        --srv_port 80""".format(SENT_SIGNAL_FILENAME,
-                                                RECEIVED_SIGNAL_FILENAME)
+    # server_command = """python ext/client.py \
+    #                     --input_file {} \
+    #                     --output_file {} \
+    #                     --srv_hostname iscsrv72.epfl.ch \
+    #                     --srv_port 80""".format(SENT_SIGNAL_FILENAME,
+    #                                             RECEIVED_SIGNAL_FILENAME)
+    #
+    # os.system(server_command)
 
-    os.system(server_command)
-
-    write_file(decode(np.loadtxt(RECEIVED_SIGNAL_FILENAME), sent_signal_length), OUTPUT_FILENAME)
+    write_file(decode(np.loadtxt(RECEIVED_SIGNAL_FILENAME), detection_sequence, sent_signal_length), OUTPUT_FILENAME)
 
     check_successful_transmission(INPUT_FILENAME, OUTPUT_FILENAME)
