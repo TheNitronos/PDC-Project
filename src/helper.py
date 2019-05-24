@@ -14,7 +14,7 @@ def random_detection_sequence(length):
 
 def find_signal(signal, sent_signal_length, detection_sequence):
     encoded_detection_sequence = encode(detection_sequence)
-    convolution = np.convolve(signal, encoded_detection_sequence)
+    convolution = np.correlate(signal, encoded_detection_sequence)
     i = np.argmax(convolution)
     return signal[i:i+sent_signal_length]
 
