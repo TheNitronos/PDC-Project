@@ -38,10 +38,10 @@ def decode(received_signal, detection_sequence, sent_signal_length):
     signal_input  = find_signal(received_signal, sent_signal_length, detection_sequence)/modulation(sent_signal_length)
     signal_output = []
 
-    for i in range(sent_signal_length//K):
+    for i in range(sent_signal_length//K-len(detection_sequence)):
         acc = 0
         for j in range(K):
-            acc += signal_input[i * K + j]
+            acc += signal_input[len(detection_sequence) + i * K + j]
         if (acc//K < 0):
             signal_output.append(False)
         else:

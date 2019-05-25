@@ -43,7 +43,7 @@ if __name__ == '__main__':
     RECEIVED_SIGNAL_FILENAME = str(args.output_file)[:-4] + "-received-signal.txt"
 
 
-    detection_sequence = random_detection_sequence(32)
+    detection_sequence = random_detection_sequence(1024)
     sent_signal = encode(detection_sequence+read_file(INPUT_FILENAME))
     sent_signal_length = len(sent_signal)
     print(sent_signal_length)
