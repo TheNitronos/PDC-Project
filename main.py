@@ -39,14 +39,22 @@ if __name__ == '__main__':
     INPUT_FILENAME  = args.input_file
     OUTPUT_FILENAME = args.output_file
 
-    SENT_SIGNAL_FILENAME     = str(args.input_file) [:-4]  + "-sent-signal.txt"
+    DETECTION_SEQUENCE_FILENAME  = str(args.input_file) [:-4]  + "-detection-sequence.txt"
+    INPUT_BITS_FILENAME          = str(args.input_file) [:-4]  + "-bits.txt"
+    OUTPUT_BITS_FILENAME         = str(args.output_file)[:-4]  + "-bits.txt"
+
+    SENT_SIGNAL_FILENAME     = str(args.input_file) [:-4] + "-sent-signal.txt"
     RECEIVED_SIGNAL_FILENAME = str(args.output_file)[:-4] + "-received-signal.txt"
 
 
-    detection_sequence = random_detection_sequence(20)
-    sent_signal        = encoder(detection_sequence+read_file(INPUT_FILENAME))
+    detection_sequence = random_detection_sequence(30)
+    bits               = detection_sequence+read_file(INPUT_FILENAME)
+    np.savetxt(DETECTION_SEQUENCE_FILENAME, detection_sequence)
+    np.savetxt(INPUT_BITS_FILENAME, bits)
+
+    sent_signal        = encoder(bits)
     sent_signal_length = len(sent_signal)
-    np.savetxt(SENT_SIGNAL_FILENAME, sent_signal)
+    np.savetxt(SENT_SIGNAL_FILENAME, np.real(sent_signal))
 
     server_command = """python ext/client.py \
                         --input_file {} \
@@ -57,6 +65,8 @@ if __name__ == '__main__':
 
     os.system(server_command)
 
-    write_file(decode(np.loadtxt(RECEIVED_SIGNAL_FILENAME), detection_sequence, sent_signal_length), OUTPUT_FILENAME)
+    decoded_bits = decode(np.loadtxt(RECEIVED_SIGNAL_FILENAME), detection_sequence, sent_signal_length)
+    np.savetxt(OUTPUT_BITS_FILENAME, decoded_bits)
+    write_file(decoded_bits[30:], OUTPUT_FILENAME)
 
     check_successful_transmission(INPUT_FILENAME, OUTPUT_FILENAME)
