@@ -58,6 +58,9 @@ if __name__ == '__main__':
     sent_signal_length = len(sent_signal)
     np.savetxt(SENT_SIGNAL_FILENAME, np.real(sent_signal))
 
+    print("{} samples\n{} seconds".format(sent_signal_length, \
+                                          sent_signal_length/Fs))
+
     server_command = """python ext/client.py \
                         --input_file {} \
                         --output_file {} \
