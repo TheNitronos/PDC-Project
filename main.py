@@ -47,7 +47,7 @@ if __name__ == '__main__':
     RECEIVED_SIGNAL_FILENAME = str(args.output_file)[:-4] + "-received-signal.txt"
 
 
-    detection_sequence = random_detection_sequence(30)
+    detection_sequence = random_detection_sequence(20)
     bits               = detection_sequence+read_file(INPUT_FILENAME)
     np.savetxt(DETECTION_SEQUENCE_FILENAME, detection_sequence)
     np.savetxt(INPUT_BITS_FILENAME, bits)
@@ -67,6 +67,6 @@ if __name__ == '__main__':
 
     decoded_bits = decode(np.loadtxt(RECEIVED_SIGNAL_FILENAME), detection_sequence, sent_signal_length)
     np.savetxt(OUTPUT_BITS_FILENAME, decoded_bits)
-    write_file(decoded_bits[30:], OUTPUT_FILENAME)
+    write_file(decoded_bits[20:], OUTPUT_FILENAME)
 
     check_successful_transmission(INPUT_FILENAME, OUTPUT_FILENAME)
