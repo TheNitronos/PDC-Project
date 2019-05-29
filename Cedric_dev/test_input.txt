@@ -1,1 +1,0 @@
-Voilà le test en taille réelle (160 caractères environ) et avec des caractères spéciaux en prime : $, #, @ J'espère que le fichier résultat ne sera pas trop gros. Condensateur.
