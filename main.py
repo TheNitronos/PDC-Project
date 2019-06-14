@@ -1,3 +1,4 @@
+from src.io     import *
 from src.helper import *
 
 import os
@@ -38,13 +39,27 @@ if __name__ == '__main__':
     INPUT_FILENAME  = args.input_file
     OUTPUT_FILENAME = args.output_file
 
-    SENT_SIGNAL_FILENAME     = str(args.input_file)[:-4]  + "-sent-signal.txt"
+    DETECTION_SEQUENCE_FILENAME  = str(args.input_file) [:-4]  + "-detection-sequence.txt"
+
+    INPUT_BITS_FILENAME  = str(args.input_file) [:-4] + "-bits.txt"
+    OUTPUT_BITS_FILENAME = str(args.output_file)[:-4] + "-bits.txt"
+
+    SENT_SIGNAL_FILENAME     = str(args.input_file) [:-4] + "-sent-signal.txt"
     RECEIVED_SIGNAL_FILENAME = str(args.output_file)[:-4] + "-received-signal.txt"
 
-    booleans = read_file(INPUT_FILENAME)
+    DETECTION_SEQUENCE_LENGTH = 20
 
-    ## TODO: turn the booleans (binary representation of INPUT_FILENAME content) into the signal to send and
-    ##       save it in SENT_SIGNAL_FILENAME file
+    detection_sequence = random_detection_sequence(DETECTION_SEQUENCE_LENGTH)
+    bits               = detection_sequence+read_file(INPUT_FILENAME)
+    np.savetxt(DETECTION_SEQUENCE_FILENAME, detection_sequence)
+    np.savetxt(INPUT_BITS_FILENAME, bits)
+
+    sent_signal        = encoder(bits)
+    sent_signal_length = len(sent_signal)
+    np.savetxt(SENT_SIGNAL_FILENAME, np.real(sent_signal))
+
+    print("{} samples\n{} seconds".format(sent_signal_length, \
+                                          sent_signal_length/Fs))
 
     server_command = """python ext/client.py \
                         --input_file {} \
@@ -55,10 +70,8 @@ if __name__ == '__main__':
 
     os.system(server_command)
 
-    ## TODO: use the received signal in RECEIVED_SIGNAL_FILENAME file to recover the binary representation of
-    ##       the received message and affect it to output_message variable (uncomment and complete the following lines)
+    decoded_bits = decoder(np.loadtxt(RECEIVED_SIGNAL_FILENAME), detection_sequence, sent_signal_length)
+    np.savetxt(OUTPUT_BITS_FILENAME, decoded_bits)
+    write_file(decoded_bits[DETECTION_SEQUENCE_LENGTH:], OUTPUT_FILENAME)
 
-    # output_message = #todo
-    # write_file(output_message)
-
-    # check_successful_transmission(INPUT_FILENAME, OUTPUT_FILENAME)
+    check_successful_transmission(INPUT_FILENAME, OUTPUT_FILENAME)

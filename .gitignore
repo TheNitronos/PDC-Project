@@ -1,2 +1,7 @@
 *.pyc
-Text-Files/
+
+res/in/*-bits\.txt
+res/in/*-detection-sequence\.txt
+res/in/*-sent-signal\.txt
+
+res/out/
